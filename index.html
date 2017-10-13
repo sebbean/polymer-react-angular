@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="/bower_components/polymer/polymer.html">
+
+    <link rel="import" href="/bower_components/paper-progress/paper-progress.html">
+
+
+    <script src="/bower_components/react/react.development.js"></script>
+    <script src="/bower_components/react/react-dom.development.js"></script>
+
+    <script src="/bower_components/angular/angular.js"></script>
+
+  </head>
+  <body>
+    <h1>Regular HTML DOM</h1>
+    <paper-progress id="prog" class="transiting" value="40" secondary-progress="80"></paper-progress>
+    <script>
+      setInterval(() => {
+        document.getElementById('prog').setAttribute('value', 50);
+      }, 1000)
+    </script>
+
+    <hr>
+
+    <h1>React</h1>
+    <div id="react-root"></div>
+    <script>
+      class Prog extends React.Component {
+        constructor(props) {
+          super(props)
+          this.state = {
+            value: 40
+          }
+        }
+        componentDidMount() {
+          setInterval(() => {
+            this.progress.setAttribute('value', 80)
+          }, 1000)
+          setInterval(() => {
+            this.setState({value: 90})
+          }, 3000)
+        }
+
+        render() {
+          return (
+            React.createElement('paper-progress', {
+              value: this.state.value,
+              className: 'transiting',
+              'secondary-progress': 80,
+              ref: (pp) => this.progress = pp
+            })
+          )
+        }
+      }
+      ReactDOM.render(React.createElement(Prog), document.getElementById('react-root'));
+    </script>
+
+    <hr>
+
+    <h1>Angular</h1>
+
+    <div ng-app="myApp">
+      <div ng-controller="CtrlOne">
+        Hello, {{name}}
+        <paper-progress id="angu-prog" class="transiting" value="20"></paper-progress>
+      </div>
+
+      <script>
+        var myApp = angular.module("myApp", []);
+        myApp.controller("CtrlOne", function ($scope) {
+          $scope.name = "Andre";
+
+          var myEl = angular.element(document.querySelector('#angu-prog'));
+          myEl.attr('value',40);
+
+          setInterval(() => {
+            myEl.attr('value',80);
+          }, 1000)
+        });
+      </script>
+    </div>
+  </body>
+</html>
